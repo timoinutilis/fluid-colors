@@ -1,7 +1,5 @@
 package
 {
-	import com.adobe.serialization.json.JSON;
-	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.GradientType;
@@ -154,7 +152,7 @@ package
 			var configObject:Object;
 			try
 			{
-				configObject = com.adobe.serialization.json.JSON.decode(configText, false);
+				configObject = JSON.parse(configText);
 				config.parse(configObject);
 			}
 			catch (e:Error)

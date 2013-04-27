@@ -23,17 +23,34 @@ package
 			_rows = object.rows;
 			_colorSets = new Vector.<Vector.<uint>>();
 			var colorSetsArray:Array = object.color_sets;
-			for each (var colorSet:Array in colorSetsArray)
+			for each (var colorSet:String in colorSetsArray)
 			{
-				_colorSets.push(Vector.<uint>(colorSet));
+				_colorSets.push(parseColors(colorSet));
 			}
 			_mouseEffects = object.mouse_effects;
-			_mouseColors = Vector.<uint>(object.mouse_colors);
+			_mouseColors = parseColors(object.mouse_colors);
 			_spotMinSeconds = object.spot_min_seconds;
 			_spotMaxSeconds = object.spot_max_seconds;
 			_setChangeSeconds = object.set_change_seconds;
 			_mask = object.mask;
 			_maskScale = object.mask_scale;
+		}
+		
+		private function parseColors(string:String):Vector.<uint>
+		{
+			var parts:Array = string.split(" ");
+			var colors:Vector.<uint> = new Vector.<uint>();
+			for each (var part:String in parts)
+			{
+				var start:int = part.indexOf("#");
+				if (start != -1)
+				{
+					part = part.substr(start + 1, 6);
+					var color:int = parseInt("0x" + part);
+					colors.push(color);
+				}
+			}
+			return colors;
 		}
 
 		public function get columns():int
