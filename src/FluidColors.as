@@ -154,7 +154,7 @@ package
 			var configObject:Object;
 			try
 			{
-				configObject = JSON.decode(configText, false);
+				configObject = com.adobe.serialization.json.JSON.decode(configText, false);
 				config.parse(configObject);
 			}
 			catch (e:Error)
