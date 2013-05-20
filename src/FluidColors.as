@@ -1,5 +1,7 @@
 package
 {
+	import com.adobe.serialization.json.JSON;
+	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.GradientType;
@@ -86,7 +88,14 @@ CONFIG::editor
 			
 			if (ExternalInterface.available)
 			{
-				ExternalInterface.addCallback("Colors_onMouseMove", onMouseMoveJS);
+				try
+				{
+					ExternalInterface.addCallback("Colors_onMouseMove", onMouseMoveJS);
+				}
+				catch (e:Error)
+				{
+					// ignore
+				}
 			}
 		}
 		
@@ -320,7 +329,7 @@ CONFIG::player
 			var configObject:Object;
 			try
 			{
-				configObject = JSON.parse(configText);
+				configObject = com.adobe.serialization.json.JSON.decode(configText);
 				config.parse(configObject);
 			}
 			catch (e:Error)
