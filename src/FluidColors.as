@@ -28,6 +28,7 @@ package
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFieldType;
+	import flash.text.TextFormat;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
@@ -36,8 +37,11 @@ package
 	{
 CONFIG::editor
 {
-		[Embed(source="../colors_config.txt", mimeType="application/octet-stream")]
+		[Embed(source="editor_colors_config.txt", mimeType="application/octet-stream")]
 		private const DefaultConfigText:Class;
+		
+		[Embed(source="logo.png", mimeType="image/png")]
+		private const Logo:Class;
 }
 
 		public static const START_COLOR:uint = 0xFFFFFF;
@@ -55,6 +59,7 @@ CONFIG::editor
 		private var _rectSize:int;
 		private var _examples:Vector.<String>;
 		
+		private var _textFormat:TextFormat;
 		private var _editorContainer:Sprite;
 		private var _tf:TextField;
 		private var _editor:TextField;
@@ -67,6 +72,8 @@ CONFIG::editor
 			Security.allowDomain("*");
 			
 			stage.scaleMode = StageScaleMode.EXACT_FIT;
+			
+			_textFormat = new TextFormat("_sans");
 
 			CONFIG::editor
 			{
@@ -86,15 +93,21 @@ CONFIG::editor
 CONFIG::editor
 {
 		private function initEditor():void
-		{
+		{			
+			var logo:Bitmap = new Logo() as Bitmap;
+			logo.smoothing = true;
+			logo.x = 10;
+			logo.y = 10;
+			
 			_editor = new TextField();
+			_editor.defaultTextFormat = _textFormat;
 			_editor.multiline = true;
 			_editor.border = true;
 			_editor.type = TextFieldType.INPUT;
 			_editor.x = 10;
-			_editor.y = 10;
+			_editor.y = 10 + logo.height;
 			_editor.width = 620;
-			_editor.height = 400;
+			_editor.height = 400 - logo.height;
 			
 			var textBytes:ByteArray = new DefaultConfigText() as ByteArray;
 			var text:String = textBytes.toString();
@@ -128,6 +141,7 @@ CONFIG::editor
 			_okButton.addEventListener(MouseEvent.CLICK, onClickOK);
 			
 			_editorContainer = new Sprite();
+			_editorContainer.addChild(logo);
 			_editorContainer.addChild(_editor);
 			_editorContainer.addChild(testButton);
 			_editorContainer.addChild(copyButton);
@@ -144,9 +158,10 @@ CONFIG::editor
 		private function createButton(text:String, x:Number, y:Number):TextField
 		{
 			var button:TextField = new TextField();
+			button.defaultTextFormat = _textFormat;
 			button.autoSize = TextFieldAutoSize.LEFT;
 			button.border = true;
-			button.text = text;
+			button.text = " " + text + " ";
 			button.background = true;
 			button.backgroundColor = 0xCCCCCC;
 			button.selectable = false;
@@ -154,6 +169,8 @@ CONFIG::editor
 			button.y = y;
 			button.addEventListener(MouseEvent.ROLL_OVER, onOverButton);
 			button.addEventListener(MouseEvent.ROLL_OUT, onOutButton);
+			button.addEventListener(MouseEvent.MOUSE_DOWN, onDownButton);
+			button.addEventListener(MouseEvent.MOUSE_UP, onOverButton);
 			return button;
 		}
 		
@@ -167,6 +184,12 @@ CONFIG::editor
 		{
 			var textField:TextField = e.currentTarget as TextField;
 			textField.backgroundColor = 0xCCCCCC;
+		}
+		
+		private function onDownButton(e:MouseEvent):void
+		{
+			var textField:TextField = e.currentTarget as TextField;
+			textField.backgroundColor = 0xCCDDEE;
 		}
 		
 		private function onClickTest(e:MouseEvent):void
@@ -268,6 +291,7 @@ CONFIG::player
 			if (_tf == null)
 			{
 				_tf = new TextField();
+				_tf.defaultTextFormat = _textFormat;
 				_tf.autoSize = TextFieldAutoSize.LEFT;
 				_tf.textColor = 0xFF0000;
 				_tf.x = 10;
