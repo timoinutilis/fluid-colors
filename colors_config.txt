@@ -14,3 +14,35 @@
 	"mask": true,
 	"mask_scale": 2.5
 }
+----
+{
+	"columns": 10,
+	"rows": 8,
+	"color_sets": [
+		"#FF0000 #FF6600 #FFCC00 #FF0066 #FF00CC #FF0066",
+		"#00FF00 #00FF66 #00FFCC #66FF00 #CCFF00 #66FF00",
+		"#0000FF #6600FF #CC00FF #0066FF #00CCFF #0066FF"
+	],
+	"mouse_effects": true,
+	"mouse_colors": "#FFFFFF #FFFFFF #FFFFFF",
+	"spot_min_seconds": 2.0,
+	"spot_max_seconds": 4.0,
+	"set_change_seconds": 6.0,
+	"mask": false,
+	"mask_scale": 2.5
+}
+----
+{
+	"columns": 30,
+	"rows": 20,
+	"color_sets": [
+		"#FFFFFF #000000 #000000 #000000 #000000 #000000"
+	],
+	"mouse_effects": false,
+	"mouse_colors": "#FFFFFF",
+	"spot_min_seconds": 1.0,
+	"spot_max_seconds": 2.0,
+	"set_change_seconds": 8.0,
+	"mask": true,
+	"mask_scale": 3
+}
