@@ -99,6 +99,14 @@ CONFIG::editor
 			logo.x = 10;
 			logo.y = 10;
 			
+			var version:TextField = new TextField();
+			version.defaultTextFormat = _textFormat;
+			version.autoSize = TextFieldAutoSize.RIGHT;
+			version.alpha = 0.25;
+			version.text = "1.0";
+			version.x = 632 - version.width;
+			version.y = 10 + logo.height - version.height;
+			
 			_editor = new TextField();
 			_editor.defaultTextFormat = _textFormat;
 			_editor.multiline = true;
@@ -142,6 +150,7 @@ CONFIG::editor
 			
 			_editorContainer = new Sprite();
 			_editorContainer.addChild(logo);
+			_editorContainer.addChild(version);
 			_editorContainer.addChild(_editor);
 			_editorContainer.addChild(testButton);
 			_editorContainer.addChild(copyButton);
