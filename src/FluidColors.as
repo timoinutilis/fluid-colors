@@ -35,7 +35,7 @@ package
 		[Embed(source="../colors_config.txt", mimeType="application/octet-stream")]
 		private const DefaultConfigText:Class;
 
-		public static const EDITOR:Boolean = false;
+		public static const EDITOR:Boolean = true;
 		
 		public static const START_COLOR:uint = 0xFFFFFF;
 		public static const WIDTH:Number = 640;
@@ -50,10 +50,13 @@ package
 		private var _currentColorSetIndex:int;
 		private var _timer:Timer;
 		private var _rectSize:int;
+		private var _examples:Vector.<String>;
 		
 		private var _tf:TextField;
 		private var _editor:TextField;
 		private var _testButton:TextField;
+		private var _exampleButtonsContainer:Sprite;
+		private var _exampleButtons:Vector.<TextField>;
 		private var _okButton:TextField;
 		
 		public function FluidColors()
@@ -75,7 +78,22 @@ package
 				
 				var textBytes:ByteArray = new DefaultConfigText() as ByteArray;
 				var text:String = textBytes.toString();
-				_editor.text = text;
+				var examplesArray:Array = text.split("----\n");
+				_examples = Vector.<String>(examplesArray);
+				
+				_exampleButtonsContainer = new Sprite();
+				_exampleButtons = new Vector.<TextField>();
+				for (var i:int = 0; i < _examples.length; i++)
+				{
+					var button:TextField = createButton("Example " + (i+1), (button != null) ? button.x + button.width + 5 : 0, 0);
+					button.addEventListener(MouseEvent.CLICK, onClickExample);
+					_exampleButtonsContainer.addChild(button);
+					_exampleButtons.push(button);
+				}
+				_exampleButtonsContainer.x = 640 - _exampleButtonsContainer.width - 10;
+				_exampleButtonsContainer.y = 420;
+
+				setExample(0);
 				
 				_testButton = createButton("Test", 10, 420);
 				_testButton.addEventListener(MouseEvent.CLICK, onClickTest);
@@ -85,6 +103,7 @@ package
 				
 				addChild(_editor);
 				addChild(_testButton);
+				addChild(_exampleButtonsContainer);
 			}
 			else
 			{
@@ -103,6 +122,11 @@ package
 			}
 		}
 		
+		public function setExample(index:int):void
+		{
+			_editor.text = _examples[Math.min(index, _examples.length - 1)];
+		}
+		
 		private function createButton(text:String, x:Number, y:Number):TextField
 		{
 			var button:TextField = new TextField();
@@ -114,7 +138,21 @@ package
 			button.selectable = false;
 			button.x = x;
 			button.y = y;
+			button.addEventListener(MouseEvent.ROLL_OVER, onOverButton);
+			button.addEventListener(MouseEvent.ROLL_OUT, onOutButton);
 			return button;
+		}
+		
+		private function onOverButton(e:MouseEvent):void
+		{
+			var textField:TextField = e.currentTarget as TextField;
+			textField.backgroundColor = 0xEEEEEE;
+		}
+		
+		private function onOutButton(e:MouseEvent):void
+		{
+			var textField:TextField = e.currentTarget as TextField;
+			textField.backgroundColor = 0xCCCCCC;
 		}
 		
 		private function onError(e:ErrorEvent):void
@@ -317,8 +355,16 @@ package
 		{
 			removeChild(_editor);
 			removeChild(_testButton);
+			removeChild(_exampleButtonsContainer);
 			
 			init(_editor.text);
+		}
+		
+		private function onClickExample(e:MouseEvent):void
+		{
+			var button:TextField = e.currentTarget as TextField;
+			var index:int = _exampleButtons.indexOf(button);
+			setExample(index);
 		}
 		
 		private function onClickOK(e:MouseEvent):void
@@ -338,6 +384,7 @@ package
 			}
 			addChild(_editor);
 			addChild(_testButton);
+			addChild(_exampleButtonsContainer);
 		}
 		
 	}
