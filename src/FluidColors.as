@@ -8,6 +8,7 @@ package
 	import flash.display.Shape;
 	import flash.display.SpreadMethod;
 	import flash.display.Sprite;
+	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
@@ -23,6 +24,7 @@ package
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.system.Security;
+	import flash.system.System;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFieldType;
@@ -35,7 +37,7 @@ package
 		[Embed(source="../colors_config.txt", mimeType="application/octet-stream")]
 		private const DefaultConfigText:Class;
 
-		public static const EDITOR:Boolean = true;
+		public static const EDITOR:Boolean = CONFIG::editor;
 		
 		public static const START_COLOR:uint = 0xFFFFFF;
 		public static const WIDTH:Number = 640;
@@ -52,9 +54,9 @@ package
 		private var _rectSize:int;
 		private var _examples:Vector.<String>;
 		
+		private var _editorContainer:Sprite;
 		private var _tf:TextField;
 		private var _editor:TextField;
-		private var _testButton:TextField;
 		private var _exampleButtonsContainer:Sprite;
 		private var _exampleButtons:Vector.<TextField>;
 		private var _okButton:TextField;
@@ -95,15 +97,25 @@ package
 
 				setExample(0);
 				
-				_testButton = createButton("Test", 10, 420);
-				_testButton.addEventListener(MouseEvent.CLICK, onClickTest);
+				var testButton:TextField = createButton("Test", 10, 420);
+				testButton.addEventListener(MouseEvent.CLICK, onClickTest);
+
+				var copyButton:TextField = createButton("Copy", testButton.x + testButton.width + 10, 420);
+				copyButton.addEventListener(MouseEvent.CLICK, onClickCopy);
+				
+				var fullscreenButton:TextField = createButton("Fullscreen", copyButton.x + copyButton.width + 10, 420);
+				fullscreenButton.addEventListener(MouseEvent.CLICK, onClickFullscreen);
 				
 				_okButton = createButton("OK", 10, 40);
 				_okButton.addEventListener(MouseEvent.CLICK, onClickOK);
 				
-				addChild(_editor);
-				addChild(_testButton);
-				addChild(_exampleButtonsContainer);
+				_editorContainer = new Sprite();
+				_editorContainer.addChild(_editor);
+				_editorContainer.addChild(testButton);
+				_editorContainer.addChild(copyButton);
+				_editorContainer.addChild(fullscreenButton);
+				_editorContainer.addChild(_exampleButtonsContainer);
+				addChild(_editorContainer);
 			}
 			else
 			{
@@ -343,21 +355,38 @@ package
 		
 		private function onTimer(e:TimerEvent):void
 		{
-			var rand:int = int(Math.random() * (config.colorSets.length - 1));
-			if (rand >= _currentColorSetIndex)
+			if (config.colorSets.length > 1)
 			{
-				rand++;
+				var rand:int = int(Math.random() * (config.colorSets.length - 1));
+				if (rand >= _currentColorSetIndex)
+				{
+					rand++;
+				}
+				_currentColorSetIndex = rand;
 			}
-			_currentColorSetIndex = rand;
 		}
 		
 		private function onClickTest(e:MouseEvent):void
 		{
-			removeChild(_editor);
-			removeChild(_testButton);
-			removeChild(_exampleButtonsContainer);
-			
+			removeChild(_editorContainer);
 			init(_editor.text);
+		}
+		
+		private function onClickCopy(e:MouseEvent):void
+		{
+			System.setClipboard(_editor.text);
+		}
+		
+		private function onClickFullscreen(e:MouseEvent):void
+		{
+			if (stage.displayState == StageDisplayState.NORMAL)
+			{	
+				stage.displayState = StageDisplayState.FULL_SCREEN;
+			}
+			else
+			{
+				stage.displayState = StageDisplayState.NORMAL;
+			}
 		}
 		
 		private function onClickExample(e:MouseEvent):void
@@ -382,9 +411,7 @@ package
 			{
 				removeChild(_okButton);
 			}
-			addChild(_editor);
-			addChild(_testButton);
-			addChild(_exampleButtonsContainer);
+			addChild(_editorContainer);
 		}
 		
 	}
