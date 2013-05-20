@@ -34,11 +34,12 @@ package
 	[SWF(width = "640", height = "480", frameRate = "30", backgroundColor="0xFFFFFF")]
 	public class FluidColors extends Sprite
 	{
+CONFIG::editor
+{
 		[Embed(source="../colors_config.txt", mimeType="application/octet-stream")]
 		private const DefaultConfigText:Class;
+}
 
-		public static const EDITOR:Boolean = CONFIG::editor;
-		
 		public static const START_COLOR:uint = 0xFFFFFF;
 		public static const WIDTH:Number = 640;
 		public static const HEIGHT:Number = 480;
@@ -67,71 +68,72 @@ package
 			
 			stage.scaleMode = StageScaleMode.EXACT_FIT;
 
-			if (EDITOR)
+			CONFIG::editor
 			{
-				_editor = new TextField();
-				_editor.multiline = true;
-				_editor.border = true;
-				_editor.type = TextFieldType.INPUT;
-				_editor.x = 10;
-				_editor.y = 10;
-				_editor.width = 620;
-				_editor.height = 400;
-				
-				var textBytes:ByteArray = new DefaultConfigText() as ByteArray;
-				var text:String = textBytes.toString();
-				var examplesArray:Array = text.split("----\n");
-				_examples = Vector.<String>(examplesArray);
-				
-				_exampleButtonsContainer = new Sprite();
-				_exampleButtons = new Vector.<TextField>();
-				for (var i:int = 0; i < _examples.length; i++)
-				{
-					var button:TextField = createButton("Example " + (i+1), (button != null) ? button.x + button.width + 5 : 0, 0);
-					button.addEventListener(MouseEvent.CLICK, onClickExample);
-					_exampleButtonsContainer.addChild(button);
-					_exampleButtons.push(button);
-				}
-				_exampleButtonsContainer.x = 640 - _exampleButtonsContainer.width - 10;
-				_exampleButtonsContainer.y = 420;
-
-				setExample(0);
-				
-				var testButton:TextField = createButton("Test", 10, 420);
-				testButton.addEventListener(MouseEvent.CLICK, onClickTest);
-
-				var copyButton:TextField = createButton("Copy", testButton.x + testButton.width + 10, 420);
-				copyButton.addEventListener(MouseEvent.CLICK, onClickCopy);
-				
-				var fullscreenButton:TextField = createButton("Fullscreen", copyButton.x + copyButton.width + 10, 420);
-				fullscreenButton.addEventListener(MouseEvent.CLICK, onClickFullscreen);
-				
-				_okButton = createButton("OK", 10, 40);
-				_okButton.addEventListener(MouseEvent.CLICK, onClickOK);
-				
-				_editorContainer = new Sprite();
-				_editorContainer.addChild(_editor);
-				_editorContainer.addChild(testButton);
-				_editorContainer.addChild(copyButton);
-				_editorContainer.addChild(fullscreenButton);
-				_editorContainer.addChild(_exampleButtonsContainer);
-				addChild(_editorContainer);
+				initEditor();
 			}
-			else
+			CONFIG::player
 			{
-				var request:URLRequest = new URLRequest("colors_config.txt");
-				
-				var loader:URLLoader = new URLLoader();
-				loader.addEventListener(Event.COMPLETE, onConfigLoaded);
-				loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
-				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
-				loader.load(request);
+				initPlayer();
 			}
 			
 			if (ExternalInterface.available)
 			{
 				ExternalInterface.addCallback("Colors_onMouseMove", onMouseMoveJS);
 			}
+		}
+		
+CONFIG::editor
+{
+		private function initEditor():void
+		{
+			_editor = new TextField();
+			_editor.multiline = true;
+			_editor.border = true;
+			_editor.type = TextFieldType.INPUT;
+			_editor.x = 10;
+			_editor.y = 10;
+			_editor.width = 620;
+			_editor.height = 400;
+			
+			var textBytes:ByteArray = new DefaultConfigText() as ByteArray;
+			var text:String = textBytes.toString();
+			var examplesArray:Array = text.split("----\n");
+			_examples = Vector.<String>(examplesArray);
+			
+			_exampleButtonsContainer = new Sprite();
+			_exampleButtons = new Vector.<TextField>();
+			for (var i:int = 0; i < _examples.length; i++)
+			{
+				var button:TextField = createButton("Example " + (i+1), (button != null) ? button.x + button.width + 5 : 0, 0);
+				button.addEventListener(MouseEvent.CLICK, onClickExample);
+				_exampleButtonsContainer.addChild(button);
+				_exampleButtons.push(button);
+			}
+			_exampleButtonsContainer.x = 640 - _exampleButtonsContainer.width - 10;
+			_exampleButtonsContainer.y = 420;
+			
+			setExample(0);
+			
+			var testButton:TextField = createButton("Test", 10, 420);
+			testButton.addEventListener(MouseEvent.CLICK, onClickTest);
+			
+			var copyButton:TextField = createButton("Copy", testButton.x + testButton.width + 10, 420);
+			copyButton.addEventListener(MouseEvent.CLICK, onClickCopy);
+			
+			var fullscreenButton:TextField = createButton("Fullscreen", copyButton.x + copyButton.width + 10, 420);
+			fullscreenButton.addEventListener(MouseEvent.CLICK, onClickFullscreen);
+			
+			_okButton = createButton("OK", 10, 40);
+			_okButton.addEventListener(MouseEvent.CLICK, onClickOK);
+			
+			_editorContainer = new Sprite();
+			_editorContainer.addChild(_editor);
+			_editorContainer.addChild(testButton);
+			_editorContainer.addChild(copyButton);
+			_editorContainer.addChild(fullscreenButton);
+			_editorContainer.addChild(_exampleButtonsContainer);
+			addChild(_editorContainer);
 		}
 		
 		public function setExample(index:int):void
@@ -167,10 +169,99 @@ package
 			textField.backgroundColor = 0xCCCCCC;
 		}
 		
+		private function onClickTest(e:MouseEvent):void
+		{
+			removeChild(_editorContainer);
+			initConfig(_editor.text);
+		}
+		
+		private function onClickCopy(e:MouseEvent):void
+		{
+			System.setClipboard(_editor.text);
+		}
+		
+		private function onClickFullscreen(e:MouseEvent):void
+		{
+			if (stage.displayState == StageDisplayState.NORMAL)
+			{	
+				stage.displayState = StageDisplayState.FULL_SCREEN;
+			}
+			else
+			{
+				stage.displayState = StageDisplayState.NORMAL;
+			}
+		}
+		
+		private function onClickExample(e:MouseEvent):void
+		{
+			var button:TextField = e.currentTarget as TextField;
+			var index:int = _exampleButtons.indexOf(button);
+			setExample(index);
+		}
+		
+		private function onClickOK(e:MouseEvent):void
+		{
+			removeEventListener(MouseEvent.CLICK, onClickOK);
+			if (_container != null)
+			{
+				reset();
+			}
+			if (_tf != null && _tf.parent != null)
+			{
+				removeChild(_tf);
+			}
+			if (_okButton != null && _okButton.parent != null)
+			{
+				removeChild(_okButton);
+			}
+			addChild(_editorContainer);
+		}
+		
+		private function reset():void
+		{
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_container.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			
+			CONFIG::editor
+			{
+				_container.removeEventListener(MouseEvent.CLICK, onClickOK);
+			}
+			
+			_timer.reset();
+			_timer.removeEventListener(TimerEvent.TIMER, onTimer);
+			_timer = null;
+			
+			removeChild(_container);
+			_colorsBitmap = null;
+			_container = null;
+		}
+
+}
+		
+CONFIG::player
+{
+		private function initPlayer():void
+		{
+			var request:URLRequest = new URLRequest("colors_config.txt");
+			
+			var loader:URLLoader = new URLLoader();
+			loader.addEventListener(Event.COMPLETE, onConfigLoaded);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, onError);
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onError);
+			loader.load(request);
+		}
+
 		private function onError(e:ErrorEvent):void
 		{
 			showError("Could not load configuration file!");
 		}
+		
+		private function onConfigLoaded(e:Event):void
+		{
+			var loader:URLLoader = e.currentTarget as URLLoader;
+			initConfig(loader.data);
+		}
+}
 		
 		private function showError(text:String):void
 		{
@@ -185,19 +276,13 @@ package
 			addChild(_tf);
 			_tf.text = text;
 			
-			if (EDITOR)
+			CONFIG::editor
 			{
 				addChild(_okButton);
 			}
 		}
 		
-		private function onConfigLoaded(e:Event):void
-		{
-			var loader:URLLoader = e.currentTarget as URLLoader;
-			init(loader.data);
-		}
-		
-		private function init(configText:String):void
+		private function initConfig(configText:String):void
 		{
 			var configObject:Object;
 			try
@@ -254,25 +339,11 @@ package
 			
 			addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			_container.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			if (EDITOR)
+			
+			CONFIG::editor
 			{
 				_container.addEventListener(MouseEvent.CLICK, onClickOK);
 			}
-		}
-		
-		private function reset():void
-		{
-			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-			_container.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-			_container.removeEventListener(MouseEvent.CLICK, onClickOK);
-			
-			_timer.reset();
-			_timer.removeEventListener(TimerEvent.TIMER, onTimer);
-			_timer = null;
-			
-			removeChild(_container);
-			_colorsBitmap = null;
-			_container = null;
 		}
 		
 		public function getColor(column:int, row:int):Spot
@@ -365,54 +436,6 @@ package
 				_currentColorSetIndex = rand;
 			}
 		}
-		
-		private function onClickTest(e:MouseEvent):void
-		{
-			removeChild(_editorContainer);
-			init(_editor.text);
-		}
-		
-		private function onClickCopy(e:MouseEvent):void
-		{
-			System.setClipboard(_editor.text);
-		}
-		
-		private function onClickFullscreen(e:MouseEvent):void
-		{
-			if (stage.displayState == StageDisplayState.NORMAL)
-			{	
-				stage.displayState = StageDisplayState.FULL_SCREEN;
-			}
-			else
-			{
-				stage.displayState = StageDisplayState.NORMAL;
-			}
-		}
-		
-		private function onClickExample(e:MouseEvent):void
-		{
-			var button:TextField = e.currentTarget as TextField;
-			var index:int = _exampleButtons.indexOf(button);
-			setExample(index);
-		}
-		
-		private function onClickOK(e:MouseEvent):void
-		{
-			removeEventListener(MouseEvent.CLICK, onClickOK);
-			if (_container != null)
-			{
-				reset();
-			}
-			if (_tf != null && _tf.parent != null)
-			{
-				removeChild(_tf);
-			}
-			if (_okButton != null && _okButton.parent != null)
-			{
-				removeChild(_okButton);
-			}
-			addChild(_editorContainer);
-		}
-		
+				
 	}
 }
