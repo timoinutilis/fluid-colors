@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>Fluid Colors</title>
+<style type="text/css">
+    body {
+    	color: #000000;
+    	background-color: #ffffff;
+    	font-family: "Helvetica Neue", Arial, Helvetica, "Nimbus Sans L", sans-serif;
+    }
+</style>
+</head>
+
+<body>
+<h1>Fluid Colors</h1>
+
+<h2>What Is This?</h2>
+<p>Fluid Colors was created to put a background with changing colors to a website. Not just simple changing, but cool changing. It was made quite configurable, so you can create a variety of color effects.</p>
+
+<p>The screen of Fluid Colors can have several parts called spots, each of them changes continuously its color. It will be a randomly chosen color of a predefined color set. You can define several color sets, which will switch from time to time. Optionally there is a mouse effect, which changes the color of the spot under the mouse when moving it. Last but not least (I don't really know what this expression means) you can overlay the whole thing with a vignette mask.</p>
+
+<p>By the way, Fluid Colors needs Flash Player.</p>
+
+
+<h2>How Does It Work?</h2>
+
+<p>Open the Fluid Colors Editor and you will see a strange text. This is the configuration! Sorry for not having a real interface, but I was too lazy to make one.</p>
+
+<p>Anyway, just click on "Test" to see something (and move the mouse over what you see!). If you have seen enough, click wherever you want. Try all examples (click on an exampe button and then "Test")! So this is how it can look like.</p>
+
+<p>The configuration text is in a format called JSON. It's quite simple to understand, but if you have problems, look for it in the internet! Just be careful with the commas, for example every line with a color set needs a comma at the end except the last one! And "yes" and "no" in JSONish is "true" and "false". So just look at the examples and try some changes! By the way, if you click again on an example, you will lose your changes.</p>
+
+<p>You like your creation? Click on "Copy", open any text editor and paste it into a new file. Save it somewhere under "colors_config.txt".</p>
+
+
+<h2>How To Put It Into A Webpage?</h2>
+
+<p>Copy the file "FluidColors.swf" and your "colors_config.txt" into the same folder where your HTML lives. Now you have to edit your HTML. Insert the following text directly under "&lt;body&gt;":</p>
+
+<code>
+&lt;!-- fluid colors start --&gt;<br>
+&lt;div style="width:100%; height:100%; top:0; left:0; position: fixed;"&gt;&lt;object id="colorsSwf" data="FluidColors.swf" type="application/x-shockwave-flash" width="100%" height="100%"&gt;&lt;param name="allowScriptAccess" value="always" /&gt;&lt;/object&gt;&lt;/div&gt;<br>
+&lt;script type="text/javascript"&gt;document.getElementsByTagName("body")[0].onmousemove = function(e) {var colorsSwfObject = document.getElementById("colorsSwf"); if (colorsSwfObject.Colors_onMouseMove) {colorsSwfObject.Colors_onMouseMove(e.clientX / colorsSwfObject.clientWidth, e.clientY / colorsSwfObject.clientHeight);}};&lt;/script&gt;<br>
+&lt;!-- fluid colors end --&gt;<br>
+</code>
+
+<p>That should it be!</p>
+
+<p>
+Greets,<br>
+Timo
+</p>
+
+<p>
+<a href="mailto:timo.kloss@inutilis.de">timo.kloss@inutilis.de</a><br>
+<a href="http://www.inutilis.de">www.inutilis.de</a>
+</p>
+</body>
+
+</html>
