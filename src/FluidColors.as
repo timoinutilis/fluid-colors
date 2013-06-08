@@ -268,6 +268,8 @@ CONFIG::editor
 				_container.removeEventListener(MouseEvent.CLICK, onClickOK);
 			}
 			
+			_blur = null;
+			
 			_timer.reset();
 			_timer.removeEventListener(TimerEvent.TIMER, onTimer);
 			_timer = null;
@@ -338,7 +340,7 @@ CONFIG::player
 				return;
 			}
 			
-			_rectSize = 120 / config.columns;
+			_rectSize = 640 / config.columns;
 			
 			_colorsBitmap = new Bitmap(new BitmapData(config.columns * _rectSize, config.rows * _rectSize, false), PixelSnapping.ALWAYS, true);
 			_colorsBitmap.width = stage.stageWidth;
@@ -373,7 +375,10 @@ CONFIG::player
 
 			addChild(_container);
 
-			_blur = new BlurFilter(_rectSize * 1.5, _rectSize * 1.5);
+			if (config.blur > 0)
+			{
+				_blur = new BlurFilter(_rectSize * config.blur, _rectSize * config.blur, 3);
+			}
 						
 			_timer = new Timer(config.setChangeSeconds * 1000);
 			_timer.addEventListener(TimerEvent.TIMER, onTimer);
@@ -427,7 +432,10 @@ CONFIG::player
 			rect.y = 0;
 			rect.width = _colorsBitmap.bitmapData.width;
 			rect.height = _colorsBitmap.bitmapData.height;
-			_colorsBitmap.bitmapData.applyFilter(_colorsBitmap.bitmapData, rect, new Point(0, 0), _blur);
+			if (_blur != null)
+			{
+				_colorsBitmap.bitmapData.applyFilter(_colorsBitmap.bitmapData, rect, new Point(0, 0), _blur);
+			}
 		}
 		
 		private function onMouseMove(e:MouseEvent):void

@@ -4,13 +4,15 @@
 	"color_sets": [
 		"#FF0000 #FF6600 #FFCC00 #FF0066 #FF00CC #FF0066",
 		"#00FF00 #00FF66 #00FFCC #66FF00 #CCFF00 #66FF00",
-		"#0000FF #6600FF #CC00FF #0066FF #00CCFF #0066FF"
+		"#0000FF #6600FF #0066FF #00CCFF #0066FF"
 	],
 	"mouse_effects": true,
 	"mouse_colors": "#880000 #008800 #000088",
 	"spot_min_seconds": 1.0,
 	"spot_max_seconds": 2.0,
 	"set_change_seconds": 8.0,
+	"blur": 1.5,
+	"blur_quality": 1,
 	"mask": true,
 	"mask_scale": 2.5
 }
@@ -26,6 +28,8 @@
 	"spot_min_seconds": 1.0,
 	"spot_max_seconds": 2.0,
 	"set_change_seconds": 8.0,
+	"blur": 0.8,
+	"blur_quality": 2,
 	"mask": true,
 	"mask_scale": 1.4
 }
@@ -42,6 +46,65 @@
 	"spot_min_seconds": 3.0,
 	"spot_max_seconds": 6.0,
 	"set_change_seconds": 16.0,
+	"blur": 1.0,
+	"blur_quality": 1,
 	"mask": false,
 	"mask_scale": 1
+}
+----
+{
+	"columns": 8,
+	"rows": 6,
+	"color_sets": [
+		"#0000FF",
+		"#0088FF",
+		"#00FF88",
+		"#008888",
+		"#00FFFF"
+	],
+	"mouse_effects": false,
+	"mouse_colors": "#004488",
+	"spot_min_seconds": 2.0,
+	"spot_max_seconds": 4.0,
+	"set_change_seconds": 6.0,
+	"blur": 1.0,
+	"blur_quality": 1,
+	"mask": false,
+	"mask_scale": 6
+}
+----
+{
+	"columns": 10,
+	"rows": 8,
+	"color_sets": [
+		"#1f1c15 #ce7b83 #56888f #152a69 #cf9c02 #c13423 #2c7724 #c6ac91 #b93c5e #d2ba9e #5e534f #e7af02"
+	],
+	"mouse_effects": true,
+	"mouse_colors": "#1f1c15",
+	"spot_min_seconds": 2.0,
+	"spot_max_seconds": 4.0,
+	"set_change_seconds": 6.0,
+	"blur": 0.0,
+	"blur_quality": 1,
+	"mask": true,
+	"mask_scale": 6
+}
+----
+{
+	"columns": 10,
+	"rows": 8,
+	"color_sets": [
+		"#ffffff",
+		"#ffffff",
+		"#ffffff"
+	],
+	"mouse_effects": true,
+	"mouse_colors": "#660000 #006600 #000066",
+	"spot_min_seconds": 2.0,
+	"spot_max_seconds": 8.0,
+	"set_change_seconds": 2.0,
+	"blur": 0.0,
+	"blur_quality": 1,
+	"mask": true,
+	"mask_scale": 6
 }

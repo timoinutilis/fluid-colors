@@ -10,6 +10,8 @@ package
 		private var _spotMinSeconds:Number;
 		private var _spotMaxSeconds:Number;
 		private var _setChangeSeconds:Number;
+		private var _blur:Number;
+		private var _blurQuality:int;
 		private var _mask:Boolean;
 		private var _maskScale:Number;
 
@@ -32,6 +34,8 @@ package
 			_spotMinSeconds = object.spot_min_seconds;
 			_spotMaxSeconds = object.spot_max_seconds;
 			_setChangeSeconds = object.set_change_seconds;
+			_blur = object.blur;
+			_blurQuality = object.blur_quality;
 			_mask = object.mask;
 			_maskScale = object.mask_scale;
 		}
@@ -93,6 +97,16 @@ package
 			return _setChangeSeconds;
 		}
 
+		public function get blur():Number
+		{
+			return _blur;
+		}
+		
+		public function get blurQuality():int
+		{
+			return _blurQuality;
+		}
+		
 		public function get mask():Boolean
 		{
 			return _mask;
