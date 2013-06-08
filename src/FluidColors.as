@@ -368,7 +368,7 @@ CONFIG::player
 				var gradientWidth:Number = WIDTH * config.maskScale;
 				var gradientHeight:Number = HEIGHT * config.maskScale;
 				matrix.createGradientBox(gradientWidth, gradientHeight, 0, 0.5 * (WIDTH - gradientWidth), 0.5 * (HEIGHT - gradientHeight));
-				maskShape.graphics.beginGradientFill(GradientType.RADIAL, [0x000000, 0x000000], [0.0, 1.0], [0, 255], matrix, SpreadMethod.PAD);
+				maskShape.graphics.beginGradientFill(GradientType.RADIAL, [config.maskColor, config.maskColor], [0.0, 1.0], [0, 255], matrix, SpreadMethod.PAD);
 				maskShape.graphics.drawRect(0, 0, WIDTH, HEIGHT);
 				_container.addChild(maskShape);
 			}

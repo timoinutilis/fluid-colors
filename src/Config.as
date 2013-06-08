@@ -14,6 +14,7 @@ package
 		private var _blurQuality:int;
 		private var _mask:Boolean;
 		private var _maskScale:Number;
+		private var _maskColor:uint;
 
 		public function Config()
 		{
@@ -38,6 +39,7 @@ package
 			_blurQuality = object.blur_quality;
 			_mask = object.mask;
 			_maskScale = object.mask_scale;
+			_maskColor = parseColor(object.mask_color, 0x000000);
 		}
 		
 		private function parseColors(string:String):Vector.<uint>
@@ -46,15 +48,28 @@ package
 			var colors:Vector.<uint> = new Vector.<uint>();
 			for each (var part:String in parts)
 			{
-				var start:int = part.indexOf("#");
-				if (start != -1)
+				var color:int = parseColor(part);
+				if (color != -1)
 				{
-					part = part.substr(start + 1, 6);
-					var color:int = parseInt("0x" + part);
 					colors.push(color);
 				}
 			}
 			return colors;
+		}
+		
+		private function parseColor(string:String, defaultColor:int = -1):int
+		{
+			if (string != null)
+			{
+				var start:int = string.indexOf("#");
+				if (start != -1)
+				{
+					string = string.substr(start + 1, 6);
+					var color:int = parseInt("0x" + string);
+					return color;
+				}
+			}
+			return defaultColor;
 		}
 
 		public function get columns():int
@@ -116,6 +131,12 @@ package
 		{
 			return _maskScale;
 		}
+
+		public function get maskColor():uint
+		{
+			return _maskColor;
+		}
+
 		
 	}
 }

@@ -14,7 +14,8 @@
 	"blur": 1.5,
 	"blur_quality": 1,
 	"mask": true,
-	"mask_scale": 2.5
+	"mask_scale": 2.5,
+	"mask_color": "#000000"
 }
 ----
 {
@@ -31,7 +32,8 @@
 	"blur": 0.8,
 	"blur_quality": 2,
 	"mask": true,
-	"mask_scale": 1.4
+	"mask_scale": 1.4,
+	"mask_color": "#000000"
 }
 ----
 {
@@ -49,7 +51,8 @@
 	"blur": 1.0,
 	"blur_quality": 1,
 	"mask": false,
-	"mask_scale": 1
+	"mask_scale": 1,
+	"mask_color": "#000000"
 }
 ----
 {
@@ -70,7 +73,8 @@
 	"blur": 1.0,
 	"blur_quality": 1,
 	"mask": false,
-	"mask_scale": 6
+	"mask_scale": 6,
+	"mask_color": "#000000"
 }
 ----
 {
@@ -87,7 +91,8 @@
 	"blur": 0.0,
 	"blur_quality": 1,
 	"mask": true,
-	"mask_scale": 6
+	"mask_scale": 6,
+	"mask_color": "#000000"
 }
 ----
 {
@@ -106,5 +111,6 @@
 	"blur": 0.0,
 	"blur_quality": 1,
 	"mask": true,
-	"mask_scale": 6
+	"mask_scale": 6,
+	"mask_color": "#000000"
 }
