@@ -10,6 +10,7 @@ package
 	import flash.display.Shape;
 	import flash.display.SpreadMethod;
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
 	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.ErrorEvent;
@@ -34,7 +35,7 @@ package
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
-	[SWF(width = "640", height = "480", frameRate = "30", backgroundColor="0xFFFFFF")]
+	[SWF(width = "640", height = "480", frameRate = "20", backgroundColor="0xFFFFFF")]
 	public class FluidColors extends Sprite
 	{
 CONFIG::editor
@@ -74,9 +75,10 @@ CONFIG::editor
 		{
 			Security.allowDomain("*");
 			
-			stage.scaleMode = StageScaleMode.EXACT_FIT;
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
 			
-			_textFormat = new TextFormat("_sans");
+			_textFormat = new TextFormat("_sans", 18);
 
 			CONFIG::editor
 			{
@@ -98,6 +100,8 @@ CONFIG::editor
 					// ignore
 				}
 			}
+			
+			stage.addEventListener(Event.RESIZE, onResize);
 		}
 		
 CONFIG::editor
@@ -144,7 +148,7 @@ CONFIG::editor
 			_exampleButtons = new Vector.<TextField>();
 			for (var i:int = 0; i < _examples.length; i++)
 			{
-				var button:TextField = createButton("Example " + (i+1), (button != null) ? button.x + button.width + 5 : 0, 0);
+				var button:TextField = createButton(String(i+1), (button != null) ? button.x + button.width + 5 : 0, 0);
 				button.addEventListener(MouseEvent.CLICK, onClickExample);
 				_exampleButtonsContainer.addChild(button);
 				_exampleButtons.push(button);
@@ -365,8 +369,8 @@ CONFIG::player
 			_rectSize = 640 / config.columns;
 			
 			_colorsBitmap = new Bitmap(new BitmapData(config.columns * _rectSize, config.rows * _rectSize, false), PixelSnapping.ALWAYS, true);
-			_colorsBitmap.width = stage.stageWidth;
-			_colorsBitmap.height = stage.stageHeight;
+			_colorsBitmap.width = WIDTH;
+			_colorsBitmap.height = HEIGHT;
 			
 			_currentColorSetIndex = Math.random() * config.colorSets.length;
 			
@@ -413,6 +417,8 @@ CONFIG::player
 			{
 				_container.addEventListener(MouseEvent.CLICK, onClickOK);
 			}
+			
+			resizePlayer();
 		}
 		
 		public function getColor(column:int, row:int):Spot
@@ -507,6 +513,20 @@ CONFIG::player
 				}
 				_currentColorSetIndex = rand;
 			}
+		}
+		
+		private function onResize(e:Event):void
+		{
+			if (_container != null)
+			{
+				resizePlayer();
+			}
+		}
+		
+		private function resizePlayer():void
+		{
+			_container.width = stage.stageWidth;
+			_container.height = stage.stageHeight;
 		}
 				
 	}

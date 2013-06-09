@@ -24,12 +24,25 @@ package
 			{
 				nextColor();
 			}
-			var factorIn:Number = _currentTime / _time;
-			var factorOut:Number = 1 - factorIn;
-			var currRed:int = red(_lastColor) * factorOut + red(_targetColor) * factorIn;
-			var currGreen:int = green(_lastColor) * factorOut + green(_targetColor) * factorIn;
-			var currBlue:int = blue(_lastColor) * factorOut + blue(_targetColor) * factorIn;
-			_currentColor = color(currRed, currGreen, currBlue);
+			if (FluidColors.config.fadeMaxSeconds == 0)
+			{
+				_currentColor = _targetColor;
+			}
+			else
+			{
+				var fadeTime:int = Math.min(_time, FluidColors.config.fadeMaxSeconds * _main.stage.frameRate);
+				var factorIn:Number = Math.min(1, _currentTime / fadeTime);
+				if (FluidColors.config.smoothFade)
+				{
+//					factorIn = factorIn * factorIn * (3 - 2 * factorIn);
+					factorIn = factorIn * factorIn * factorIn * (factorIn * (factorIn * 6 - 15) + 10);
+				}
+				var factorOut:Number = 1 - factorIn;
+				var currRed:int = red(_lastColor) * factorOut + red(_targetColor) * factorIn;
+				var currGreen:int = green(_lastColor) * factorOut + green(_targetColor) * factorIn;
+				var currBlue:int = blue(_lastColor) * factorOut + blue(_targetColor) * factorIn;
+				_currentColor = color(currRed, currGreen, currBlue);
+			}
 		}
 		
 		public function shine():void

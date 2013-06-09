@@ -9,6 +9,8 @@ package
 		private var _mouseColors:Vector.<uint>;
 		private var _spotMinSeconds:Number;
 		private var _spotMaxSeconds:Number;
+		private var _fadeMaxSeconds:Number;
+		private var _smoothFade:Boolean;
 		private var _setChangeSeconds:Number;
 		private var _blur:Number;
 		private var _blurQuality:int;
@@ -34,6 +36,8 @@ package
 			_mouseColors = parseColors(object.mouse_colors);
 			_spotMinSeconds = object.spot_min_seconds;
 			_spotMaxSeconds = object.spot_max_seconds;
+			_fadeMaxSeconds = object.fade_max_seconds;
+			_smoothFade = object.smooth_fade;
 			_setChangeSeconds = object.set_change_seconds;
 			_blur = object.blur;
 			_blurQuality = object.blur_quality;
@@ -112,6 +116,16 @@ package
 			return _setChangeSeconds;
 		}
 
+		public function get fadeMaxSeconds():Number
+		{
+			return _fadeMaxSeconds;
+		}
+		
+		public function get smoothFade():Boolean
+		{
+			return _smoothFade;
+		}
+		
 		public function get blur():Number
 		{
 			return _blur;
@@ -136,7 +150,6 @@ package
 		{
 			return _maskColor;
 		}
-
 		
 	}
 }
