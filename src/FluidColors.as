@@ -134,10 +134,10 @@ CONFIG::editor
 			_editor.addEventListener(Event.CHANGE, refreshScrollBar);
 			
 			_scrollBar = new ScrollBar();
-			_scrollBar.x = _editor.x + _editor.width + 2;
+			_scrollBar.x = _editor.x + _editor.width + 3;
 			_scrollBar.y = _editor.y;
-			_scrollBar.width = 10;
-			_scrollBar.height = _editor.height;
+			_scrollBar.width = 8;
+			_scrollBar.height = _editor.height + 1;
 			
 			var textBytes:ByteArray = new DefaultConfigText() as ByteArray;
 			var text:String = textBytes.toString();
@@ -191,7 +191,7 @@ CONFIG::editor
 		private function refreshScrollBar(e:Event = null):void
 		{
 			_scrollBar.max = _editor.numLines;
-			_scrollBar.numVisible = 24;
+			_scrollBar.numVisible = Math.floor((_editor.height) / (Number(_textFormat.size) + 4));
 		}
 		
 		public function setExample(index:int):void

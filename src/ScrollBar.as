@@ -31,6 +31,7 @@ package
 				_numVisible = value;
 				redrawBar();
 			}
+			trace("vis " + value);
 		}
 
 		public function get max():int
@@ -93,7 +94,7 @@ package
 		
 		private function placeBar():void
 		{
-			_bar.y = (_height - _bar.height) * _position / (_max - _numVisible);
+			_bar.y = _height * _position / _max;
 		}
 
 	}
