@@ -65,6 +65,7 @@ CONFIG::editor
 		private var _editorContainer:Sprite;
 		private var _tf:TextField;
 		private var _editor:TextField;
+		private var _scrollBar:ScrollBar;
 		private var _exampleButtonsContainer:Sprite;
 		private var _exampleButtons:Vector.<TextField>;
 		private var _okButton:TextField;
@@ -123,8 +124,16 @@ CONFIG::editor
 			_editor.type = TextFieldType.INPUT;
 			_editor.x = 10;
 			_editor.y = 10 + logo.height;
-			_editor.width = 620;
+			_editor.width = 610;
 			_editor.height = 400 - logo.height;
+			_editor.addEventListener(Event.SCROLL, onScroll);
+			_editor.addEventListener(Event.CHANGE, refreshScrollBar);
+			
+			_scrollBar = new ScrollBar();
+			_scrollBar.x = _editor.x + _editor.width + 2;
+			_scrollBar.y = _editor.y;
+			_scrollBar.width = 10;
+			_scrollBar.height = _editor.height;
 			
 			var textBytes:ByteArray = new DefaultConfigText() as ByteArray;
 			var text:String = textBytes.toString();
@@ -144,6 +153,7 @@ CONFIG::editor
 			_exampleButtonsContainer.y = 420;
 			
 			setExample(0);
+			refreshScrollBar();
 			
 			var testButton:TextField = createButton("Test", 10, 420);
 			testButton.addEventListener(MouseEvent.CLICK, onClickTest);
@@ -161,11 +171,23 @@ CONFIG::editor
 			_editorContainer.addChild(logo);
 			_editorContainer.addChild(version);
 			_editorContainer.addChild(_editor);
+			_editorContainer.addChild(_scrollBar);
 			_editorContainer.addChild(testButton);
 			_editorContainer.addChild(copyButton);
 			_editorContainer.addChild(fullscreenButton);
 			_editorContainer.addChild(_exampleButtonsContainer);
 			addChild(_editorContainer);
+		}
+		
+		private function onScroll(e:Event):void
+		{
+			_scrollBar.position = _editor.scrollV - 1;
+		}
+		
+		private function refreshScrollBar(e:Event = null):void
+		{
+			_scrollBar.max = _editor.numLines;
+			_scrollBar.numVisible = 24;
 		}
 		
 		public function setExample(index:int):void
