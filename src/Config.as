@@ -4,6 +4,7 @@ package
 	{
 		private var _columns:int;
 		private var _rows:int;
+		private var _keepAspectRatio:Boolean;
 		private var _colorSets:Vector.<Vector.<uint>>;
 		private var _mouseEffects:Boolean;
 		private var _mouseColors:Vector.<uint>;
@@ -26,6 +27,7 @@ package
 		{
 			_columns = object.columns;
 			_rows = object.rows;
+			_keepAspectRatio = object.keep_aspect_ratio;
 			_colorSets = new Vector.<Vector.<uint>>();
 			var colorSetsArray:Array = object.color_sets;
 			for each (var colorSet:String in colorSetsArray)
@@ -84,6 +86,11 @@ package
 		public function get rows():int
 		{
 			return _rows;
+		}
+		
+		public function get keepAspectRatio():Boolean
+		{
+			return _keepAspectRatio;
 		}
 		
 		public function get colorSets():Vector.<Vector.<uint>>

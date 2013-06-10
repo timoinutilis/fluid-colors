@@ -1,6 +1,7 @@
 {
 	"columns": 3,
 	"rows": 2,
+	"keep_aspect_ratio": false,
 	"color_sets": [
 		"#FF0000 #FF6600 #FFCC00 #FF0066 #FF00CC #FF0066",
 		"#00FF00 #00FF66 #00FFCC #66FF00 #CCFF00 #66FF00",
@@ -23,6 +24,7 @@
 {
 	"columns": 5,
 	"rows": 8,
+	"keep_aspect_ratio": false,
 	"color_sets": [
 		"#FFFFFF #888888 #000000"
 	],
@@ -43,6 +45,7 @@
 {
 	"columns": 30,
 	"rows": 20,
+	"keep_aspect_ratio": false,
 	"color_sets": [
 		"#FFFFFF #000000 #000000 #000000 #000000 #000000 #FFFFFF #000000 #000000 #000000 #000000 #000000 #FF8888"
 	],
@@ -63,6 +66,7 @@
 {
 	"columns": 30,
 	"rows": 3,
+	"keep_aspect_ratio": false,
 	"color_sets": [
 		"#FFFF88 #FF8844",
 		"#FF8844 #886622"
@@ -84,6 +88,7 @@
 {
 	"columns": 8,
 	"rows": 6,
+	"keep_aspect_ratio": false,
 	"color_sets": [
 		"#0000FF",
 		"#0088FF",
@@ -108,6 +113,7 @@
 {
 	"columns": 10,
 	"rows": 8,
+	"keep_aspect_ratio": true,
 	"color_sets": [
 		"#1f1c15 #ce7b83 #56888f #152a69 #cf9c02 #c13423 #2c7724 #c6ac91 #b93c5e #d2ba9e #5e534f #e7af02"
 	],
@@ -128,6 +134,7 @@
 {
 	"columns": 10,
 	"rows": 8,
+	"keep_aspect_ratio": false,
 	"color_sets": [
 		"#ffffff",
 		"#ffffff",

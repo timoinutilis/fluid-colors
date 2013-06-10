@@ -66,7 +66,9 @@ CONFIG::editor
 		private var _editorContainer:Sprite;
 		private var _tf:TextField;
 		private var _editor:TextField;
+		private var _version:TextField
 		private var _scrollBar:ScrollBar;
+		private var _controlButtonsContainer:Sprite;
 		private var _exampleButtonsContainer:Sprite;
 		private var _exampleButtons:Vector.<TextField>;
 		private var _okButton:TextField;
@@ -101,7 +103,12 @@ CONFIG::editor
 				}
 			}
 			
-			stage.addEventListener(Event.RESIZE, onResize);
+			stage.addEventListener(Event.RESIZE, onResizePlayer);
+		}
+		
+		private function resizeEditor():void
+		{
+			
 		}
 		
 CONFIG::editor
@@ -113,13 +120,12 @@ CONFIG::editor
 			logo.x = 10;
 			logo.y = 10;
 			
-			var version:TextField = new TextField();
-			version.defaultTextFormat = _textFormat;
-			version.autoSize = TextFieldAutoSize.RIGHT;
-			version.alpha = 0.25;
-			version.text = "1.0";
-			version.x = 632 - version.width;
-			version.y = 10 + logo.height - version.height;
+			_version = new TextField();
+			_version.defaultTextFormat = _textFormat;
+			_version.autoSize = TextFieldAutoSize.RIGHT;
+			_version.alpha = 0.25;
+			_version.text = "1.0";
+			_version.y = 10 + logo.height - _version.height;
 			
 			_editor = new TextField();
 			_editor.defaultTextFormat = _textFormat;
@@ -128,16 +134,10 @@ CONFIG::editor
 			_editor.type = TextFieldType.INPUT;
 			_editor.x = 10;
 			_editor.y = 10 + logo.height;
-			_editor.width = 610;
-			_editor.height = 400 - logo.height;
 			_editor.addEventListener(Event.SCROLL, onScroll);
 			_editor.addEventListener(Event.CHANGE, refreshScrollBar);
 			
 			_scrollBar = new ScrollBar();
-			_scrollBar.x = _editor.x + _editor.width + 3;
-			_scrollBar.y = _editor.y;
-			_scrollBar.width = 8;
-			_scrollBar.height = _editor.height + 1;
 			
 			var textBytes:ByteArray = new DefaultConfigText() as ByteArray;
 			var text:String = textBytes.toString();
@@ -145,42 +145,75 @@ CONFIG::editor
 			_examples = Vector.<String>(examplesArray);
 			
 			_exampleButtonsContainer = new Sprite();
+			
+			var examplesText:TextField = new TextField();
+			examplesText.defaultTextFormat = _textFormat;
+			examplesText.autoSize = TextFieldAutoSize.LEFT;
+			examplesText.text = "Examples: ";
+			examplesText.x = 0;
+			_exampleButtonsContainer.addChild(examplesText);
+
 			_exampleButtons = new Vector.<TextField>();
 			for (var i:int = 0; i < _examples.length; i++)
 			{
-				var button:TextField = createButton(String(i+1), (button != null) ? button.x + button.width + 5 : 0, 0);
+				var button:TextField = createButton(String(i+1), (button != null) ? button.x + button.width + 5 : examplesText.width, 0);
 				button.addEventListener(MouseEvent.CLICK, onClickExample);
 				_exampleButtonsContainer.addChild(button);
 				_exampleButtons.push(button);
 			}
-			_exampleButtonsContainer.x = 640 - _exampleButtonsContainer.width - 10;
-			_exampleButtonsContainer.y = 420;
 			
 			setExample(0);
 			refreshScrollBar();
 			
-			var testButton:TextField = createButton("Test", 10, 420);
+			_controlButtonsContainer = new Sprite();
+			
+			var testButton:TextField = createButton("Test", 0, 0);
 			testButton.addEventListener(MouseEvent.CLICK, onClickTest);
 			
-			var copyButton:TextField = createButton("Copy", testButton.x + testButton.width + 10, 420);
+			var copyButton:TextField = createButton("Copy", testButton.x + testButton.width + 10, 0);
 			copyButton.addEventListener(MouseEvent.CLICK, onClickCopy);
 			
-			var fullscreenButton:TextField = createButton("Fullscreen", copyButton.x + copyButton.width + 10, 420);
+			var fullscreenButton:TextField = createButton("Fullscreen", copyButton.x + copyButton.width + 10, 0);
 			fullscreenButton.addEventListener(MouseEvent.CLICK, onClickFullscreen);
+
+			_controlButtonsContainer.addChild(testButton);
+			_controlButtonsContainer.addChild(copyButton);
+			_controlButtonsContainer.addChild(fullscreenButton);
 			
 			_okButton = createButton("OK", 10, 40);
 			_okButton.addEventListener(MouseEvent.CLICK, onClickOK);
 			
 			_editorContainer = new Sprite();
 			_editorContainer.addChild(logo);
-			_editorContainer.addChild(version);
+			_editorContainer.addChild(_version);
 			_editorContainer.addChild(_editor);
 			_editorContainer.addChild(_scrollBar);
-			_editorContainer.addChild(testButton);
-			_editorContainer.addChild(copyButton);
-			_editorContainer.addChild(fullscreenButton);
+			_editorContainer.addChild(_controlButtonsContainer);
 			_editorContainer.addChild(_exampleButtonsContainer);
 			addChild(_editorContainer);
+			
+			stage.addEventListener(Event.RESIZE, onResizeEditor);
+			onResizeEditor();
+		}
+		
+		private function onResizeEditor(e:Event = null):void
+		{
+			_editor.width = stage.stageWidth - 30;
+			_editor.height = stage.stageHeight - _editor.y - 60;
+			
+			_scrollBar.x = _editor.x + _editor.width + 3;
+			_scrollBar.y = _editor.y;
+			_scrollBar.width = 8;
+			_scrollBar.height = _editor.height + 1;
+			
+			_version.x = stage.stageWidth - 16 - _version.width;
+			
+			_controlButtonsContainer.x = 10;
+			_controlButtonsContainer.y = stage.stageHeight - 45;
+			_exampleButtonsContainer.x = _editor.x + _editor.width - _exampleButtonsContainer.width;
+			_exampleButtonsContainer.y = stage.stageHeight - 45;
+
+			refreshScrollBar();
 		}
 		
 		private function onScroll(e:Event):void
@@ -197,6 +230,7 @@ CONFIG::editor
 		public function setExample(index:int):void
 		{
 			_editor.text = _examples[Math.min(index, _examples.length - 1)];
+			refreshScrollBar();
 		}
 		
 		private function createButton(text:String, x:Number, y:Number):TextField
@@ -418,7 +452,7 @@ CONFIG::player
 				_container.addEventListener(MouseEvent.CLICK, onClickOK);
 			}
 			
-			resizePlayer();
+			onResizePlayer();
 		}
 		
 		public function getColor(column:int, row:int):Spot
@@ -515,19 +549,27 @@ CONFIG::player
 			}
 		}
 		
-		private function onResize(e:Event):void
+		private function onResizePlayer(e:Event = null):void
 		{
 			if (_container != null)
 			{
-				resizePlayer();
+				if (config.keepAspectRatio)
+				{
+					_container.width = stage.stageWidth;
+					_container.scaleY = _container.scaleX;
+					if (_container.height < stage.stageHeight)
+					{
+						_container.height = stage.stageHeight;
+						_container.scaleX = _container.scaleY;
+					}
+				}
+				else
+				{
+					_container.width = stage.stageWidth;
+					_container.height = stage.stageHeight;
+				}
 			}
 		}
 		
-		private function resizePlayer():void
-		{
-			_container.width = stage.stageWidth;
-			_container.height = stage.stageHeight;
-		}
-				
 	}
 }
