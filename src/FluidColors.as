@@ -24,6 +24,8 @@ package
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.net.FileFilter;
+	import flash.net.FileReference;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.system.Security;
@@ -72,6 +74,7 @@ CONFIG::editor
 		private var _exampleButtonsContainer:Sprite;
 		private var _exampleButtons:Vector.<TextField>;
 		private var _okButton:TextField;
+		private var _loaderFileRef:FileReference;
 		
 		public function FluidColors()
 		{
@@ -167,17 +170,21 @@ CONFIG::editor
 			
 			_controlButtonsContainer = new Sprite();
 			
-			var testButton:TextField = createButton("Test", 0, 0);
+			var testButton:TextField = createButton("Test it!", 0, 0);
 			testButton.addEventListener(MouseEvent.CLICK, onClickTest);
 			
-			var copyButton:TextField = createButton("Copy", testButton.x + testButton.width + 10, 0);
-			copyButton.addEventListener(MouseEvent.CLICK, onClickCopy);
+			var saveButton:TextField = createButton("Save", testButton.x + testButton.width + 10, 0);
+			saveButton.addEventListener(MouseEvent.CLICK, onClickSave);
 			
-			var fullscreenButton:TextField = createButton("Fullscreen", copyButton.x + copyButton.width + 10, 0);
+			var loadButton:TextField = createButton("Load", saveButton.x + saveButton.width + 10, 0);
+			loadButton.addEventListener(MouseEvent.CLICK, onClickLoad);
+			
+			var fullscreenButton:TextField = createButton("Fullscreen", loadButton.x + loadButton.width + 10, 0);
 			fullscreenButton.addEventListener(MouseEvent.CLICK, onClickFullscreen);
 
 			_controlButtonsContainer.addChild(testButton);
-			_controlButtonsContainer.addChild(copyButton);
+			_controlButtonsContainer.addChild(saveButton);
+			_controlButtonsContainer.addChild(loadButton);
 			_controlButtonsContainer.addChild(fullscreenButton);
 			
 			_okButton = createButton("OK", 10, 40);
@@ -194,6 +201,10 @@ CONFIG::editor
 			
 			stage.addEventListener(Event.RESIZE, onResizeEditor);
 			onResizeEditor();
+			
+			_loaderFileRef = new FileReference();
+			_loaderFileRef.addEventListener(Event.SELECT, onLoadSelect);
+			_loaderFileRef.addEventListener(Event.COMPLETE, onLoadComplete);
 		}
 		
 		private function onResizeEditor(e:Event = null):void
@@ -276,9 +287,26 @@ CONFIG::editor
 			initConfig(_editor.text);
 		}
 		
-		private function onClickCopy(e:MouseEvent):void
+		private function onClickSave(e:MouseEvent):void
 		{
-			System.setClipboard(_editor.text);
+			var fileRef:FileReference = new FileReference();
+			fileRef.save(_editor.text, "colors_config.json");
+		}
+		
+		private function onClickLoad(e:MouseEvent):void
+		{
+			_loaderFileRef.browse([new FileFilter("Configuration (*.json)", "*.json")]);
+		}
+		
+		private function onLoadSelect(e:Event):void
+		{
+			_loaderFileRef.load();
+		}
+		
+		private function onLoadComplete(e:Event):void
+		{
+			var text:String = _loaderFileRef.data.toString();
+			_editor.text = text;
 		}
 		
 		private function onClickFullscreen(e:MouseEvent):void
@@ -345,7 +373,7 @@ CONFIG::player
 {
 		private function initPlayer():void
 		{
-			var request:URLRequest = new URLRequest("colors_config.txt");
+			var request:URLRequest = new URLRequest("colors_config.json");
 			
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, onConfigLoaded);
