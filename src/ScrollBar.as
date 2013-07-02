@@ -31,7 +31,6 @@ package
 				_numVisible = value;
 				redrawBar();
 			}
-			trace("vis " + value);
 		}
 
 		public function get max():int

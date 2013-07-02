@@ -13,11 +13,14 @@ package
 		private var _fadeMaxSeconds:Number;
 		private var _smoothFade:Boolean;
 		private var _setChangeSeconds:Number;
-		private var _blur:Number;
+		private var _blurX:Number;
+		private var _blurY:Number;
 		private var _blurQuality:int;
 		private var _mask:Boolean;
 		private var _maskScale:Number;
 		private var _maskColor:uint;
+		private var _spotScale:Number;
+		private var _backgroundColor:uint;
 
 		public function Config()
 		{
@@ -41,11 +44,14 @@ package
 			_fadeMaxSeconds = object.fade_max_seconds;
 			_smoothFade = object.smooth_fade;
 			_setChangeSeconds = object.set_change_seconds;
-			_blur = object.blur;
+			_blurX = object.blur_x;
+			_blurY = object.blur_y;
 			_blurQuality = object.blur_quality;
 			_mask = object.mask;
 			_maskScale = object.mask_scale;
 			_maskColor = parseColor(object.mask_color, 0x000000);
+			_spotScale = object.spot_scale;
+			_backgroundColor = parseColor(object.background_color, 0xFFFFFF);
 		}
 		
 		private function parseColors(string:String):Vector.<uint>
@@ -133,9 +139,14 @@ package
 			return _smoothFade;
 		}
 		
-		public function get blur():Number
+		public function get blurX():Number
 		{
-			return _blur;
+			return _blurX;
+		}
+		
+		public function get blurY():Number
+		{
+			return _blurY;
 		}
 		
 		public function get blurQuality():int
@@ -156,6 +167,16 @@ package
 		public function get maskColor():uint
 		{
 			return _maskColor;
+		}
+
+		public function get spotScale():Number
+		{
+			return _spotScale;
+		}
+
+		public function get backgroundColor():uint
+		{
+			return _backgroundColor;
 		}
 		
 	}

@@ -61,7 +61,8 @@ CONFIG::editor
 		private var _blur:BlurFilter;
 		private var _currentColorSetIndex:int;
 		private var _timer:Timer;
-		private var _rectSize:int;
+		private var _rectWidth:int;
+		private var _rectHeight:int;
 		private var _examples:Vector.<String>;
 		
 		private var _textFormat:TextFormat;
@@ -428,9 +429,10 @@ CONFIG::player
 				return;
 			}
 			
-			_rectSize = 640 / config.columns;
+			_rectWidth = 640 / config.columns;
+			_rectHeight = 480 / config.rows;
 			
-			_colorsBitmap = new Bitmap(new BitmapData(config.columns * _rectSize, config.rows * _rectSize, false), PixelSnapping.ALWAYS, true);
+			_colorsBitmap = new Bitmap(new BitmapData(config.columns * _rectWidth, config.rows * _rectHeight, false, config.backgroundColor), PixelSnapping.ALWAYS, true);
 			_colorsBitmap.width = WIDTH;
 			_colorsBitmap.height = HEIGHT;
 			
@@ -463,9 +465,9 @@ CONFIG::player
 
 			addChild(_container);
 
-			if (config.blur > 0)
+			if (config.blurX > 0 || config.blurY > 0)
 			{
-				_blur = new BlurFilter(_rectSize * config.blur, _rectSize * config.blur, 3);
+				_blur = new BlurFilter(_rectWidth * config.blurX, _rectHeight * config.blurY, 3);
 			}
 						
 			_timer = new Timer(config.setChangeSeconds * 1000);
@@ -505,14 +507,28 @@ CONFIG::player
 		
 		private function onEnterFrame(e:Event):void
 		{
-			var rect:Rectangle = new Rectangle(0, 0, _rectSize, _rectSize);
+			var border:Number;
+			if (_rectWidth > _rectHeight)
+			{
+				border = _rectHeight - (_rectHeight * config.spotScale);
+			}
+			else
+			{
+				border = _rectWidth - (_rectWidth * config.spotScale);
+			}
+			var rect:Rectangle = new Rectangle(0, 0, _rectWidth - border, _rectHeight - border);
+			
+			if ((config.blurX != 0 || config.blurY != 0) && config.spotScale < 1)
+			{
+				_colorsBitmap.bitmapData.fillRect(_colorsBitmap.bitmapData.rect, config.backgroundColor);
+			}
 			
 			for (var column:int = 0; column < config.columns; column++)
 			{
 				for (var row:int = 0; row < config.rows; row++)
 				{
-					rect.x = column * _rectSize;
-					rect.y = row * _rectSize;
+					rect.x = column * _rectWidth + border * 0.5;
+					rect.y = row * _rectHeight + border * 0.5;
 					_spots[row][column].update();
 					_colorsBitmap.bitmapData.fillRect(rect, _spots[row][column].currentColor);
 				}
@@ -554,8 +570,8 @@ CONFIG::player
 		{
 			if (config.mouseEffects)
 			{
-				var column:int = point.x / _rectSize;
-				var row:int = point.y / _rectSize;
+				var column:int = point.x / _rectWidth;
+				var row:int = point.y / _rectHeight;
 				var color:Spot = getColor(column, row);
 				if (color != null)
 				{
