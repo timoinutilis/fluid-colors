@@ -137,7 +137,7 @@ CONFIG::editor
 			_editor.border = true;
 			_editor.type = TextFieldType.INPUT;
 			_editor.x = 10;
-			_editor.y = 10 + logo.height;
+			_editor.y = 10 + logo.height + 5;
 			_editor.addEventListener(Event.SCROLL, onScroll);
 			_editor.addEventListener(Event.CHANGE, refreshScrollBar);
 			

@@ -1,3 +1,4 @@
+/* FLUID COLORS */
 {
 	"columns": 3,
 	"rows": 2,
@@ -24,6 +25,7 @@
 	"background_color": "#FFFFFF"
 }
 ----
+/* SQUARE LIGHTS */
 {
 	"columns": 5,
 	"rows": 8,
@@ -48,6 +50,7 @@
 	"background_color": "#000000"
 }
 ----
+/* MICROBES */
 {
 	"columns": 30,
 	"rows": 20,
@@ -72,6 +75,7 @@
 	"background_color": "#FFFFFF"
 }
 ----
+/* DUNES */
 {
 	"columns": 30,
 	"rows": 3,
@@ -97,6 +101,7 @@
 	"background_color": "#FFFFFF"
 }
 ----
+/* BAR FADES */
 {
 	"columns": 8,
 	"rows": 6,
@@ -125,6 +130,7 @@
 	"background_color": "#FFFFFF"
 }
 ----
+/* PIXELS */
 {
 	"columns": 10,
 	"rows": 8,
@@ -149,6 +155,7 @@
 	"background_color": "#FFFFFF"
 }
 ----
+/* MOUSE WRITER */
 {
 	"columns": 10,
 	"rows": 8,
