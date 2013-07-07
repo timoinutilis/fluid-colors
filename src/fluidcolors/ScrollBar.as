@@ -1,4 +1,4 @@
-package
+package fluidcolors
 {
 	import flash.display.Shape;
 	import flash.display.Sprite;
