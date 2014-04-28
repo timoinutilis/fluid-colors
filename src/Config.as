@@ -1,4 +1,4 @@
-package fluidcolors
+package
 {
 	public class Config
 	{

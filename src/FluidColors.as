@@ -1,4 +1,4 @@
-package fluidcolors
+package
 {
 	import com.adobe.serialization.json.JSON;
 	
