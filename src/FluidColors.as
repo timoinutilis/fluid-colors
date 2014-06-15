@@ -37,7 +37,7 @@ package
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
-	[SWF(width = "640", height = "480", frameRate = "20", backgroundColor="0xFFFFFF")]
+	[SWF(width = "800", height = "600", frameRate = "20", backgroundColor="0xFFFFFF")]
 	public class FluidColors extends Sprite
 	{
 CONFIG::editor
@@ -49,9 +49,22 @@ CONFIG::editor
 		private const Logo:Class;
 }
 
-		public static const START_COLOR:uint = 0xFFFFFF;
 		public static const WIDTH:Number = 640;
 		public static const HEIGHT:Number = 480;
+		
+		public static const BACKGROUND_COLOR:int = 0x222222;
+		public static const BUTTON_COLOR_TEXT:int = 0xAAAAAA;
+		public static const BUTTON_COLOR_TEXT_HOVER:int = 0xFFFFFF;
+		public static const BUTTON_COLOR_TEXT_DOWN:int = 0x333333;
+		public static const BUTTON_COLOR_BG:int = 0x333333;
+		public static const BUTTON_COLOR_BG_HOVER:int = 0x444444;
+		public static const BUTTON_COLOR_BG_DOWN:int = 0xAAAAAA;
+		public static const EDITOR_COLOR_TEXT:int = 0xCCCCCC;
+		public static const EDITOR_COLOR_BG:int = 0x000000;
+		public static const EDITOR_COLOR_BORDER:int = 0x333333;
+		public static const SCROLL_BG_COLOR:int = BUTTON_COLOR_BG;
+		public static const SCROLL_BAR_COLOR:int = 0x555555;
+		public static const INFO_COLOR:int = 0x666666;
 		
 		public static const config:Config = new Config();
 
@@ -66,6 +79,8 @@ CONFIG::editor
 		private var _examples:Vector.<String>;
 		
 		private var _textFormat:TextFormat;
+		private var _background:Shape;
+		private var _logo:Bitmap;
 		private var _editorContainer:Sprite;
 		private var _tf:TextField;
 		private var _editor:TextField;
@@ -84,7 +99,7 @@ CONFIG::editor
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
-			_textFormat = new TextFormat("_sans", 18);
+			_textFormat = new TextFormat("_sans", 16);
 
 			CONFIG::editor
 			{
@@ -110,34 +125,37 @@ CONFIG::editor
 			stage.addEventListener(Event.RESIZE, onResizePlayer);
 		}
 		
-		private function resizeEditor():void
-		{
-			
-		}
-		
 CONFIG::editor
 {
 		private function initEditor():void
-		{			
-			var logo:Bitmap = new Logo() as Bitmap;
-			logo.smoothing = true;
-			logo.x = 10;
-			logo.y = 10;
+		{
+			_background = new Shape();
+			_background.graphics.beginFill(BACKGROUND_COLOR);
+			_background.graphics.drawRect(0, 0, 1, 1);
+			
+			_logo = new Logo() as Bitmap;
+			_logo.smoothing = true;
+			_logo.x = 10;
+			_logo.y = 10;
 			
 			_version = new TextField();
 			_version.defaultTextFormat = _textFormat;
 			_version.autoSize = TextFieldAutoSize.RIGHT;
-			_version.alpha = 0.25;
-			_version.text = "1.0";
-			_version.y = 10 + logo.height - _version.height;
+			_version.textColor = INFO_COLOR;
+			_version.text = "v1.1";
+			_version.y = 10 + _logo.height - _version.height;
 			
 			_editor = new TextField();
 			_editor.defaultTextFormat = _textFormat;
 			_editor.multiline = true;
 			_editor.border = true;
+			_editor.borderColor = EDITOR_COLOR_BORDER;
+			_editor.backgroundColor = EDITOR_COLOR_BG;
+			_editor.background = true;
+			_editor.textColor = EDITOR_COLOR_TEXT;
 			_editor.type = TextFieldType.INPUT;
 			_editor.x = 10;
-			_editor.y = 10 + logo.height + 5;
+			_editor.y = 10 + _logo.height + 10;
 			_editor.addEventListener(Event.SCROLL, onScroll);
 			_editor.addEventListener(Event.CHANGE, refreshScrollBar);
 			
@@ -152,6 +170,7 @@ CONFIG::editor
 			
 			var examplesText:TextField = new TextField();
 			examplesText.defaultTextFormat = _textFormat;
+			examplesText.textColor = INFO_COLOR;
 			examplesText.autoSize = TextFieldAutoSize.LEFT;
 			examplesText.text = "Examples: ";
 			examplesText.x = 0;
@@ -192,7 +211,8 @@ CONFIG::editor
 			_okButton.addEventListener(MouseEvent.CLICK, onClickOK);
 			
 			_editorContainer = new Sprite();
-			_editorContainer.addChild(logo);
+			_editorContainer.addChild(_background);
+			_editorContainer.addChild(_logo);
 			_editorContainer.addChild(_version);
 			_editorContainer.addChild(_editor);
 			_editorContainer.addChild(_scrollBar);
@@ -210,20 +230,23 @@ CONFIG::editor
 		
 		private function onResizeEditor(e:Event = null):void
 		{
+			_background.width = stage.stageWidth;
+			_background.height = stage.stageHeight;
+			
 			_editor.width = stage.stageWidth - 30;
-			_editor.height = stage.stageHeight - _editor.y - 60;
+			_editor.height = stage.stageHeight - _editor.y - 10;
 			
 			_scrollBar.x = _editor.x + _editor.width + 3;
 			_scrollBar.y = _editor.y;
 			_scrollBar.width = 8;
 			_scrollBar.height = _editor.height + 1;
 			
-			_version.x = stage.stageWidth - 16 - _version.width;
+			_version.x = stage.stageWidth - 10 - _version.width;
 			
-			_controlButtonsContainer.x = 10;
-			_controlButtonsContainer.y = stage.stageHeight - 45;
-			_exampleButtonsContainer.x = _editor.x + _editor.width - _exampleButtonsContainer.width;
-			_exampleButtonsContainer.y = stage.stageHeight - 45;
+			_controlButtonsContainer.x = _logo.width + 20;
+			_controlButtonsContainer.y = _logo.height + 10 - _controlButtonsContainer.height;
+			_exampleButtonsContainer.x = _controlButtonsContainer.x + _controlButtonsContainer.width + 20;
+			_exampleButtonsContainer.y = _controlButtonsContainer.y;
 
 			refreshScrollBar();
 		}
@@ -250,10 +273,12 @@ CONFIG::editor
 			var button:TextField = new TextField();
 			button.defaultTextFormat = _textFormat;
 			button.autoSize = TextFieldAutoSize.LEFT;
-			button.border = true;
+//			button.border = true;
+//			button.bor
 			button.text = " " + text + " ";
 			button.background = true;
-			button.backgroundColor = 0xCCCCCC;
+			button.backgroundColor = BUTTON_COLOR_BG;
+			button.textColor = BUTTON_COLOR_TEXT;
 			button.selectable = false;
 			button.x = x;
 			button.y = y;
@@ -267,19 +292,22 @@ CONFIG::editor
 		private function onOverButton(e:MouseEvent):void
 		{
 			var textField:TextField = e.currentTarget as TextField;
-			textField.backgroundColor = 0xEEEEEE;
+			textField.backgroundColor = BUTTON_COLOR_BG_HOVER;
+			textField.textColor = BUTTON_COLOR_TEXT_HOVER;
 		}
 		
 		private function onOutButton(e:MouseEvent):void
 		{
 			var textField:TextField = e.currentTarget as TextField;
-			textField.backgroundColor = 0xCCCCCC;
+			textField.backgroundColor = BUTTON_COLOR_BG;
+			textField.textColor = BUTTON_COLOR_TEXT;
 		}
 		
 		private function onDownButton(e:MouseEvent):void
 		{
 			var textField:TextField = e.currentTarget as TextField;
-			textField.backgroundColor = 0xCCDDEE;
+			textField.backgroundColor = BUTTON_COLOR_BG_DOWN;
+			textField.textColor = BUTTON_COLOR_TEXT_DOWN;
 		}
 		
 		private function onClickTest(e:MouseEvent):void
@@ -483,6 +511,7 @@ CONFIG::player
 			}
 			
 			onResizePlayer();
+			onEnterFrame(null);
 		}
 		
 		public function getColor(column:int, row:int):Spot

@@ -12,8 +12,9 @@ package
 		public function Spot(main:FluidColors)
 		{
 			_main = main;
-			_lastColor = FluidColors.START_COLOR;
-			_currentColor = FluidColors.START_COLOR;
+			_lastColor = getNextColor();
+			_currentColor = _lastColor;
+			
 			nextColor();
 		}
 		
@@ -48,6 +49,11 @@ package
 		public function shine():void
 		{
 			fadeToColor(_main.currentMouseColor, 10);
+		}
+		
+		private function getNextColor():uint
+		{
+			return _main.currentColorSet[int(Math.random() * _main.currentColorSet.length)];
 		}
 		
 		private function nextColor():void

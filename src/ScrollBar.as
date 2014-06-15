@@ -73,7 +73,7 @@ package
 		private function redraw():void
 		{
 			graphics.clear();
-			graphics.beginFill(0xEEEEEE);
+			graphics.beginFill(FluidColors.SCROLL_BG_COLOR);
 			graphics.drawRect(0, 0, _width, _height);
 			redrawBar();
 		}
@@ -81,7 +81,7 @@ package
 		private function redrawBar():void
 		{
 			_bar.graphics.clear();
-			_bar.graphics.beginFill(0xCCCCCC);
+			_bar.graphics.beginFill(FluidColors.SCROLL_BAR_COLOR);
 			_bar.graphics.drawRect(0, 0, _width, _height * fill);
 			placeBar();
 		}
